@@ -11,3 +11,14 @@ How start a new project?
      
 - Start the project
     docker-compose up
+
+
+How exec an existing project?
+- Compile
+    docker-compose build
+    
+- Download deps
+    docker-compose run web npm install
+     
+- Start the project
+    docker-compose up
