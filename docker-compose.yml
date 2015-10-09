@@ -7,8 +7,14 @@ web:
   dns: 8.8.8.8
   links:
     - db
+    - mail
 
 db:
   image: mongo
   volumes:
     - "./docker/data:/data"
+
+mail:
+  image: mailhog/mailhog
+  ports:
+      - "8025:8025"
