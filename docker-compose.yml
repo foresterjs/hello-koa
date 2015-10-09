@@ -5,3 +5,10 @@ web:
   ports:
     - "3000:3000"
   dns: 8.8.8.8
+  links:
+    - db
+
+db:
+  image: mongo
+  volumes:
+    - "./docker/data:/data"
