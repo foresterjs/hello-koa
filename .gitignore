@@ -1,3 +1,4 @@
 .*
 docker/data
+app/node_modules
 !.gitignore
