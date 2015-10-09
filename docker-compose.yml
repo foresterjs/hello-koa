@@ -1,0 +1,7 @@
+web:
+  build: ./docker
+  volumes:
+    - "./app:/home/noroot/app"
+  ports:
+    - "3000:3000"
+  dns: 8.8.8.8
