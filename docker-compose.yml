@@ -4,6 +4,8 @@ web:
     - "./app:/home/noroot/app"
   ports:
     - "3000:3000"
+    - "8080:8080"
+    - "5858:5858"
   dns: 8.8.8.8
   links:
     - db
