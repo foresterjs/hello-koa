@@ -4,7 +4,7 @@ ENV LANG en_US.UTF-8
 
 RUN apt-get update -qq && apt-get install -y build-essential
 
-RUN npm install -g npm-check-updates@2.3.0 yo@1.4.8 bower@1.5.3 generator-koa@0.1.5
+RUN npm install -g npm-check-updates@2.3.0 yo@1.4.8 bower@1.5.3 generator-koa@0.1.5 nodemon@1.7.1
 RUN npm config set bin-links false --global
 
 RUN adduser --disabled-password --gecos "" noroot; \
@@ -16,6 +16,6 @@ WORKDIR /home/noroot/app
 
 EXPOSE 3000
 
-CMD ["npm", "start"]
+CMD [ "nodemon", "-L", "--harmony", "app.js" ]
 
 

@@ -1,0 +1,10 @@
+{
+  "watch": [
+    "controllers/",
+    "views/",
+    "test/",
+    "app.js"
+  ],
+  "verbose": true,
+  "ext": "js json"
+}
