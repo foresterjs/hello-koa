@@ -10,15 +10,15 @@ var render = views(__dirname + '/../views', {
   map: { html: 'swig' }
 });
 
-module.exports.home = function *home() {
+exports.home = function *home() {
   this.body = yield render('list', { 'messages': messages });
 };
 
-module.exports.list = function *list() {
+exports.list = function *list() {
   this.body = yield messages;
 };
 
-module.exports.fetch = function *fetch(id) {
+exports.fetch = function *fetch(id) {
   var message = messages[id];
   if (!message) {
     this.throw(404, 'message with id = ' + id + ' was not found');
@@ -26,7 +26,7 @@ module.exports.fetch = function *fetch(id) {
   this.body = yield message;
 };
 
-module.exports.create = function *create() {
+exports.create = function *create() {
   var message = yield parse(this);
   var id = messages.push(message) - 1;
   message.id = id;
@@ -42,6 +42,6 @@ function doSomeAsync() {
 }
 
 // One way to deal with asynchronous call
-module.exports.delay = function *delay() {
+exports.delay = function *delay() {
   this.body = yield doSomeAsync();
 };
