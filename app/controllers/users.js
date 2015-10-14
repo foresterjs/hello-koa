@@ -54,33 +54,28 @@ exports.read = function *read(next) {
 
 
 
-
+var db = mongojs(connectionString);
 
 function mongoFindAll(collection, opts) {
   return function (done) {
-    var db = mongojs(connectionString);
     db.collection(collection).find(opts, done);
   }
 }
 
 function mongoFindById(collection, id) {
   return function (done) {
-    var db = mongojs(connectionString);
-
     db.collection(collection).findOne({'_id': new mongojs.ObjectId(id)}, done);
   }
 }
 
 function mongoCreate(collection, data) {
   return function (done) {
-    var db = mongojs(connectionString);
     db.collection(collection).insert(data, done);
   }
 }
 
 function mongoUpdate(collection, id, data) {
   return function (done) {
-    var db = mongojs(connectionString);
     delete data.id;
     db.collection(collection).findAndModify(
       {
