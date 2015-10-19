@@ -10,6 +10,7 @@ gulp.task('default', function () {
     script: 'app.js',
     "watch": [
       "controllers/",
+      "libs/",
       "views/",
       "test/",
       "app.js"

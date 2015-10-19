@@ -1,13 +1,13 @@
 'use strict';
+var MongoJsAdapter = require('../libs/MongoJsAdapter');
 
-var mongojs = require('mongojs')
-var collectionName = 'users';
-var connectionString = 'mongodb://hellokoa_db_1:27017/test';
+
+var dbAdapter = new MongoJsAdapter('mongodb://hellokoa_db_1:27017/test', 'users');
 
 
 exports.findAll = async function findAll(next) {
 
-  var users = await mongoFindAll('users', {});
+  var users = await dbAdapter.findAll({});
   this.body = users;
 
   await next;
@@ -16,7 +16,7 @@ exports.findAll = async function findAll(next) {
 exports.create = async function create(next) {
 
   var model = this.query;
-  var user = await mongoCreate('users', model);
+  var user = await dbAdapter.create(model);
   this.body = user;
 
   await next;
@@ -30,7 +30,7 @@ exports.update = async function update(next) {
   }
 
   var model = this.query;
-  var user = await mongoUpdate('users', this.query.id, model);
+  var user = await dbAdapter.update(this.query.id, model);
   this.body = user;
 
   await next;
@@ -43,78 +43,8 @@ exports.read = async function read(next) {
     await next;
   }
 
-  var users = await mongoFindById('users', this.query.id);
+  var users = await dbAdapter.findById(this.query.id);
   this.body = users;
 
   await next;
 };
-
-
-
-
-
-
-/** db **/
-
-var db = mongojs(connectionString);
-
-function mongoFindAll(collection, opts) {
-
-  return new Promise(function (resolve, reject) {
-    db.collection(collection).find(opts, function (err, data) {
-
-      if (err) {
-        reject(err);
-        return;
-      }
-
-      resolve(data);
-    });
-  });
-}
-
-
-function mongoFindById(collection, id) {
-  return new Promise(function (resolve, reject) {
-    db.collection(collection).findOne({'_id': new mongojs.ObjectId(id)}, function (err, data) {
-      if (err) {
-        reject(err);
-        return;
-      }
-
-      resolve(data);
-    });
-  });
-}
-
-function mongoCreate(collection, data) {
-  return new Promise(function (resolve, reject) {
-    db.collection(collection).insert(data, function (err, data) {
-      if (err) {
-        reject(err);
-        return;
-      }
-
-      resolve(data);
-    });
-  });
-}
-
-function mongoUpdate(collection, id, data) {
-  return new Promise(function (resolve, reject) {
-    delete data.id;
-    db.collection(collection).findAndModify(
-      {
-        'query': {'_id': new mongojs.ObjectId(id)},
-        'update': data,
-        'new': true
-      }, function (err, data) {
-      if (err) {
-        reject(err);
-        return;
-      }
-
-      resolve(data);
-    });
-  });
-}
