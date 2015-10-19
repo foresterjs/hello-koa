@@ -5,7 +5,7 @@ gulp.task('default', function () {
 
   nodemon({
     "execMap": {
-      "js": "node --debug --harmony"
+      "js": "babel-node --debug --harmony"
     },
     script: 'app.js',
     "watch": [

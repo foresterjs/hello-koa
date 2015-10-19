@@ -9,7 +9,7 @@ var koa = require('koa');
 var path = require('path');
 var app = module.exports = koa();
 
-
+app.experimental = true;
 
 // Logger
 app.use(logger());
@@ -28,6 +28,8 @@ app.use(route.get('/users', users.findAll));
 app.use(route.get('/users/create', users.create));
 app.use(route.get('/users/update', users.update));
 app.use(route.get('/users/read', users.read));
+
+app.use(route.get('/users/test', users.testAsync));
 
 
 // Serve static files

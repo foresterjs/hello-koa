@@ -4,48 +4,49 @@ var mongojs = require('mongojs')
 var collectionName = 'users';
 var connectionString = 'mongodb://hellokoa_db_1:27017/test';
 
-exports.findAll = function *findAll(next) {
 
-  var users = yield mongoFindAll('users', {});
+exports.findAll = async function findAll(next) {
+
+  var users = await mongoFindAll('users', {});
   this.body = users;
 
-  yield next;
+  await next;
 };
 
-exports.create = function *create(next) {
+exports.create = async function create(next) {
 
   var model = this.query;
-  var user = yield mongoCreate('users', model);
+  var user = await mongoCreate('users', model);
   this.body = user;
 
-  yield next;
+  await next;
 };
 
-exports.update = function *update(next) {
+exports.update = async function update(next) {
 
-  if(!('id' in this.query)){
-    this.body = {'err' : 'Non è stato specificato un id'};
-    yield next;
+  if (!('id' in this.query)) {
+    this.body = {'err': 'Non è stato specificato un id'};
+    await next;
   }
 
   var model = this.query;
-  var user = yield mongoUpdate('users', this.query.id, model);
+  var user = await mongoUpdate('users', this.query.id, model);
   this.body = user;
 
-  yield next;
+  await next;
 };
 
-exports.read = function *read(next) {
+exports.read = async function read(next) {
 
-  if(!('id' in this.query)){
-    this.body = {'err' : 'Non è stato specificato un id'};
-    yield next;
+  if (!('id' in this.query)) {
+    this.body = {'err': 'Non è stato specificato un id'};
+    await next;
   }
 
-  var users = yield mongoFindById('users', this.query.id);
+  var users = await mongoFindById('users', this.query.id);
   this.body = users;
 
-  yield next;
+  await next;
 };
 
 
@@ -53,35 +54,67 @@ exports.read = function *read(next) {
 
 
 
+/** db **/
 
 var db = mongojs(connectionString);
 
 function mongoFindAll(collection, opts) {
-  return function (done) {
-    db.collection(collection).find(opts, done);
-  }
+
+  return new Promise(function (resolve, reject) {
+    db.collection(collection).find(opts, function (err, data) {
+
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(data);
+    });
+  });
 }
 
+
 function mongoFindById(collection, id) {
-  return function (done) {
-    db.collection(collection).findOne({'_id': new mongojs.ObjectId(id)}, done);
-  }
+  return new Promise(function (resolve, reject) {
+    db.collection(collection).findOne({'_id': new mongojs.ObjectId(id)}, function (err, data) {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(data);
+    });
+  });
 }
 
 function mongoCreate(collection, data) {
-  return function (done) {
-    db.collection(collection).insert(data, done);
-  }
+  return new Promise(function (resolve, reject) {
+    db.collection(collection).insert(data, function (err, data) {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(data);
+    });
+  });
 }
 
 function mongoUpdate(collection, id, data) {
-  return function (done) {
+  return new Promise(function (resolve, reject) {
     delete data.id;
     db.collection(collection).findAndModify(
       {
-        'query' : {'_id': new mongojs.ObjectId(id)},
+        'query': {'_id': new mongojs.ObjectId(id)},
         'update': data,
-        'new'   : true
-      }, done);
-  }
+        'new': true
+      }, function (err, data) {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(data);
+    });
+  });
 }
